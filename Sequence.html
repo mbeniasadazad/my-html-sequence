@@ -1,0 +1,1115 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آموزش تعاملی دنباله‌های حسابی و هندسی</title>
+    
+    <!-- MathJax for rendering math formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- فونت -->
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        :root {
+            --bg-pastel: linear-gradient(135deg, #e0f7fa 0%, #fce4ec 100%);
+            --neon-blue: #00d2ff;
+            --neon-pink: #ff00cc;
+            --neon-purple: #9d4edd;
+            --neon-green: #39ff14;
+            --text-color: #333;
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            font-family: 'Vazir', sans-serif;
+            background: var(--bg-pastel);
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-bottom: 2px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            color: #4a148c;
+            font-size: 2em;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        }
+
+        header p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            width: 90%;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin-bottom: 20px;
+        }
+
+        .btn-3d {
+            background: var(--neon-blue);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            color: white;
+            font-family: 'Vazir', sans-serif;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            box-shadow: 0 6px 0 #0097b3, 0 10px 15px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            display: inline-block;
+        }
+
+        .btn-3d:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0 #0097b3, 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-pink { background: var(--neon-pink); box-shadow: 0 6px 0 #b3008f, 0 10px 15px rgba(0,0,0,0.2); }
+        .btn-pink:active { box-shadow: 0 0px 0 #b3008f, 0 5px 10px rgba(0,0,0,0.2); }
+        
+        .btn-purple { background: var(--neon-purple); box-shadow: 0 6px 0 #6a1b9a, 0 10px 15px rgba(0,0,0,0.2); }
+        .btn-purple:active { box-shadow: 0 0px 0 #6a1b9a, 0 5px 10px rgba(0,0,0,0.2); }
+        
+        .btn-green { background: var(--neon-green); color: #000; box-shadow: 0 6px 0 #2ba314, 0 10px 15px rgba(0,0,0,0.2); }
+        .btn-green:active { box-shadow: 0 0px 0 #2ba314, 0 5px 10px rgba(0,0,0,0.2); }
+
+        .btn-orange { background: #ff9800; box-shadow: 0 6px 0 #e65100, 0 10px 15px rgba(0,0,0,0.2); }
+        .btn-orange:active { box-shadow: 0 0px 0 #e65100, 0 5px 10px rgba(0,0,0,0.2); }
+
+        .btn-back { background: #607d8b; box-shadow: 0 6px 0 #455a64, 0 10px 15px rgba(0,0,0,0.2); font-size: 1em; padding: 10px 20px;}
+
+        .main-menu, .lesson-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .content-section {
+            display: none;
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            border-right: 5px solid var(--neon-purple);
+            line-height: 1.8;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .math-container {
+            direction: ltr;
+            text-align: center;
+            font-size: 1.2em;
+            margin: 15px 0;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+        }
+        
+        /* استایل برای نمایش کلمه "یا" بین فرمول ها */
+        .math-or {
+            display: block;
+            text-align: center;
+            font-family: 'Vazir', sans-serif;
+            font-size: 1.1em;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .question-box {
+            background: #f0f4c3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #cddc39;
+        }
+
+        .options label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+
+        .options input[type="radio"] {
+            margin-left: 10px;
+            transform: scale(1.5);
+            cursor: pointer;
+        }
+
+        .hint-btn {
+            background: #ffb300;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: 'Vazir';
+            font-size: 0.9em;
+            color: #fff;
+            margin-top: 10px;
+        }
+
+        .hint-text {
+            display: none;
+            background: #fff9c4;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ffd54f;
+            color: #33691e;
+        }
+
+        .main-name-input {
+            width: 80%;
+            max-width: 400px;
+            padding: 12px;
+            font-family: 'Vazir';
+            font-size: 1.2em;
+            border: 3px solid var(--neon-pink);
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            outline: none;
+            transition: 0.3s;
+        }
+        .main-name-input:focus {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .report-table th, .report-table td {
+            border: 2px solid #9d4edd;
+            padding: 12px;
+            font-size: 1.1em;
+        }
+
+        .report-table th {
+            background: #e1bee7;
+            color: #4a148c;
+        }
+
+        .report-table tr:nth-child(even) {
+            background: #f3e5f5;
+        }
+
+        .student-name-display {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4a148c;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f3e5f5;
+            border-radius: 8px;
+            border: 2px dashed var(--neon-purple);
+        }
+
+        @media print {
+            body { background: white; }
+            header, footer, .btn-3d, .hint-btn, .lesson-menu, .page:not(#report-page) { display: none !important; }
+            #report-page { display: block !important; margin: 0; padding: 0; }
+            .container { width: 100%; max-width: 100%; margin: 0; padding: 0; }
+            .card { box-shadow: none; border: none; }
+            .report-table th { background: #e1bee7 !important; -webkit-print-color-adjust: exact; }
+            .report-table tr:nth-child(even) { background: #f3e5f5 !important; -webkit-print-color-adjust: exact; }
+            .student-name-display { border: 2px solid #000; }
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.5);
+            font-size: 1em;
+            color: #555;
+            font-weight: bold;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>آموزش تعاملی ریاضی</h1>
+        <p>تهیه کننده: مژگان بنی‌اسدآزاد</p>
+        <p>دبیرستان دخترانه دوره دوم فاطمیه - ناحیه دو کرمان</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- ================= صفحه اصلی ================= -->
+        <div id="home" class="page active">
+            <div class="card" style="text-align: center;">
+                <h2 style="color: var(--neon-purple);">خوش آمدید!</h2>
+                <p>لطفاً قبل از شروع، نام و نام خانوادگی خود را وارد کنید تا در کارنامه شما ثبت شود:</p>
+                <input type="text" id="main-student-name" class="main-name-input" placeholder="نام و نام خانوادگی...">
+            </div>
+            
+            <div class="main-menu" style="flex-direction: column; align-items: center;">
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showPage('arith-lesson')">دنباله حسابی</button>
+                    <button class="btn-3d btn-purple" onclick="playSound(); showPage('geo-lesson')">دنباله هندسی</button>
+                </div>
+                <button class="btn-3d btn-orange" style="margin-top: 40px; font-size: 1.4em;" onclick="playSound(); generateReport()">مشاهده و دریافت کارنامه</button>
+            </div>
+        </div>
+
+        <!-- ================= درسنامه دنباله حسابی ================= -->
+        <div id="arith-lesson" class="page">
+            <h2 style="text-align: center; color: var(--neon-pink);">درسنامه: دنباله حسابی</h2>
+            <div class="lesson-menu">
+                <button class="btn-3d" onclick="playSound(); toggleSection('arith-sec1')">جمله عمومی</button>
+                <button class="btn-3d" onclick="playSound(); toggleSection('arith-sec2')">یافتن جمله عمومی</button>
+                <button class="btn-3d" onclick="playSound(); toggleSection('arith-sec3')">سه جمله متوالی</button>
+                <button class="btn-3d" onclick="playSound(); toggleSection('arith-sec4')">واسطه‌های حسابی</button>
+                <!-- دکمه تعداد جملات همرنگ بقیه شد (کلاس پیش‌فرض) -->
+                <button class="btn-3d" onclick="playSound(); toggleSection('arith-sec5')">تعداد جملات دنباله</button>
+            </div>
+
+            <!-- بخش 1 -->
+            <div id="arith-sec1" class="content-section">
+                <h3>جمله عمومی دنباله حسابی</h3>
+                <p>دنباله‌ای را حسابی می‌نامیم که تفاضل هر دو جمله متوالی آن، عددی ثابت باشد. این عدد ثابت را <b>قدر نسبت</b> یا <b>قدر تفاضل</b> می‌نامیم و آن را با حرف \(d\) نمایش می‌دهیم.</p>
+                <p>اگر جمله اول یک دنباله حسابی را \(a\) و قدر نسبت آن را \(d\) بنامیم، جمله عمومی (جمله \(n\) ام) آن به صورت زیر به دست می‌آید:</p>
+                <div class="math-container">\[ t_n = a + (n-1)d \]</div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showSub('arith-sec1-ex')">مثال</button>
+                    <button class="btn-3d btn-green" onclick="playSound(); showSub('arith-sec1-quiz')">آزمون</button>
+                </div>
+
+                <div id="arith-sec1-ex" class="content-section" style="border-right-color: var(--neon-pink);">
+                    <h4>مثال حل شده:</h4>
+                    <p>در دنباله \(5, 9, 13, ...\) جمله دهم را بیابید.</p>
+                    <p><b>حل:</b> ابتدا قدر نسبت را می‌یابیم: \(d = 9 - 5 = 4\). جمله اول \(a = 5\) است.</p>
+                    <div class="math-container">\[ t_{10} = 5 + (10-1)4 = 5 + 36 = 41 \]</div>
+                </div>
+
+                <div id="arith-sec1-quiz" class="content-section" style="border-right-color: var(--neon-green);">
+                    <h4>آزمون بخش جمله عمومی</h4>
+                    <div class="question-box" data-correct="b">
+                        <p><b>سوال ۱:</b> کدام یک از دنباله‌های زیر یک دنباله حسابی است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq1_1" value="a"> \(2, 4, 8, 16, ...\)</label>
+                            <label><input type="radio" name="aq1_1" value="b"> \(3, 7, 11, 15, ...\)</label>
+                            <label><input type="radio" name="aq1_1" value="c"> \(1, 4, 9, 16, ...\)</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">در دنباله حسابی، تفاضل هر دو جمله متوالی باید عددی ثابت باشد.</div>
+                    </div>
+                    <div class="question-box" data-correct="c">
+                        <p><b>سوال ۲:</b> در دنباله حسابی \(2, 6, 10, ...\) قدر نسبت (\(d\)) چقدر است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq1_2" value="a"> 2</label>
+                            <label><input type="radio" name="aq1_2" value="b"> 3</label>
+                            <label><input type="radio" name="aq1_2" value="c"> 4</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">تفاضل جمله دوم و اول را حساب کنید.</div>
+                    </div>
+                    <div class="question-box" data-correct="a">
+                        <p><b>سوال ۳:</b> جمله عمومی دنباله‌ای با جمله اول \(3\) و قدر نسبت \(5\) کدام است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq1_3" value="a"> \(t_n = 5n - 2\)</label>
+                            <label><input type="radio" name="aq1_3" value="b"> \(t_n = 3n + 5\)</label>
+                            <label><input type="radio" name="aq1_3" value="c"> \(t_n = 5n + 3\)</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">از فرمول \(t_n = a + (n-1)d\) استفاده کنید و آن را ساده کنید.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بخش 2 -->
+            <div id="arith-sec2" class="content-section">
+                <h3>یافتن جمله عمومی با داشتن دو جمله</h3>
+                <p>گاهی در مسائل، دو جمله غیرمتوالی از یک دنباله حسابی داده می‌شود (مثلاً جمله سوم و هفتم). برای یافتن قدر نسبت و جمله عمومی، از رابطه زیر استفاده می‌کنیم:</p>
+                <div class="math-container">\[ d = \frac{t_i - t_j}{i - j} \]</div>
+                <p>این فرمول می‌گوید: «تفاضل دو جمله، تقسیم بر تفاضل شماره (اندیس) آن دو جمله، برابر با قدر نسبت است.» پس از یافتن \(d\)، با جایگذاری آن در فرمول جمله عمومی یکی از جملات، جمله اول (\(a\)) را پیدا کرده و سپس جمله عمومی را می‌نویسیم.</p>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showSub('arith-sec2-ex')">مثال</button>
+                    <button class="btn-3d btn-green" onclick="playSound(); showSub('arith-sec2-quiz')">آزمون</button>
+                </div>
+
+                <div id="arith-sec2-ex" class="content-section" style="border-right-color: var(--neon-pink);">
+                    <h4>مثال:</h4>
+                    <p>در دنباله حسابی \(t_7 = 27\) و \(t_{11} = 11\).</p>
+                    <p><b>حل:</b> ابتدا قدر نسبت را می‌یابیم:</p>
+                    <div class="math-container">\[ d = \frac{11 - 27}{11 - 7} = \frac{-16}{4} = -4 \]</div>
+                    <p>برای یافتن \(a\) از معادله جمله هفتم استفاده می‌کنیم: \(27 = a + 6(-4) \Rightarrow a = 51\).</p>
+                    <p>پس جمله عمومی: \(t_n = 51 + (n-1)(-4) = -4n + 55\)</p>
+                </div>
+
+                <div id="arith-sec2-quiz" class="content-section" style="border-right-color: var(--neon-green);">
+                    <h4>آزمون یافتن جمله عمومی</h4>
+                    <div class="question-box" data-correct="b">
+                        <p><b>سوال ۱:</b> اگر \(t_2=5\) و \(t_4=11\) باشد، \(d\) کدام است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq2_1" value="a"> 2</label>
+                            <label><input type="radio" name="aq2_1" value="b"> 3</label>
+                            <label><input type="radio" name="aq2_1" value="c"> 4</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">از فرمول \(d = \frac{t_i - t_j}{i-j}\) استفاده کنید.</div>
+                    </div>
+                    <div class="question-box" data-correct="a">
+                        <p><b>سوال ۲:</b> در یک دنباله حسابی \(t_5=14\) و \(t_{10}=29\). جمله اول چند است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq2_2" value="a"> 2</label>
+                            <label><input type="radio" name="aq2_2" value="b"> 3</label>
+                            <label><input type="radio" name="aq2_2" value="c"> 4</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">ابتدا \(d\) را پیدا کنید، سپس از \(t_5 = a + 4d\) استفاده کنید.</div>
+                    </div>
+                    <div class="question-box" data-correct="c">
+                        <p><b>سوال ۳:</b> اگر \(t_3=10\) و \(t_6=19\) باشد، جمله دهم چند است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq2_3" value="a"> 28</label>
+                            <label><input type="radio" name="aq2_3" value="b"> 25</label>
+                            <label><input type="radio" name="aq2_3" value="c"> 31</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">ابتدا \(d\) و \(a\) را به دست آورید، سپس \(t_{10}\) را حساب کنید.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بخش 3 (اصلاح شده نمایش فرمول) -->
+            <div id="arith-sec3" class="content-section">
+                <h3>رابطه بین سه جمله متوالی (واسطه حسابی)</h3>
+                <p>اگر سه عدد \(x\) و \(y\) و \(z\) به ترتیب سه جمله متوالی از یک دنباله حسابی باشند، عدد وسط (\(y\)) را <b>واسطه حسابی</b> بین دو عدد دیگر می‌نامند. در این حالت، فاصله \(y\) تا \(x\) با فاصله \(z\) تا \(y\) برابر است (چون هر دو برابر قدر نسبت \(d\) هستند). بنابراین رابطه زیر برقرار است:</p>
+                
+                <!-- اصلاح شد: فرمول ها از هم جدا شدند تا کلمه "یا" به درستی نمایش داده شود -->
+                <div class="math-container">\[ 2y = x + z \]</div>
+                <span class="math-or">یا</span>
+                <div class="math-container">\[ y = \frac{x + z}{2} \]</div>
+                
+                <p>این فرمول به ما می‌گوید که دو برابر جمله وسط، برابر با مجموع دو جمله کناری است. از این رابطه برای یافتن مقادیر مجهول در مسائل استفاده می‌شود.</p>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showSub('arith-sec3-ex')">مثال</button>
+                    <button class="btn-3d btn-green" onclick="playSound(); showSub('arith-sec3-quiz')">آزمون</button>
+                </div>
+                <div id="arith-sec3-ex" class="content-section" style="border-right-color: var(--neon-pink);">
+                    <h4>مثال:</h4>
+                    <p>مقدار \(x\) را طوری بیابید که عبارات \(x-1\) و \(x+2\) و \(2x+1\) به ترتیب تشکیل یک دنباله حسابی دهند.</p>
+                    <p><b>حل:</b> طبق رابطه واسطه حسابی:</p>
+                    <div class="math-container">\[ 2(x+2) = (x-1) + (2x+1) \]</div>
+                    <div class="math-container">\[ 2x + 4 = 3x \Rightarrow x = 4 \]</div>
+                </div>
+                <div id="arith-sec3-quiz" class="content-section" style="border-right-color: var(--neon-green);">
+                    <h4>آزمون واسطه حسابی</h4>
+                    <div class="question-box" data-correct="b">
+                        <p><b>سوال ۱:</b> واسطه حسابی بین ۴ و ۱۰ کدام است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq3_1" value="a"> 6</label>
+                            <label><input type="radio" name="aq3_1" value="b"> 7</label>
+                            <label><input type="radio" name="aq3_1" value="c"> 8</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">میانگین آن‌ها را بگیرید یا از \(2y = x+z\) استفاده کنید.</div>
+                    </div>
+                    <div class="question-box" data-correct="a">
+                        <p><b>سوال ۲:</b> اگر \(2, x, 8\) سه جمله متوالی حسابی باشند، \(x\) چقدر است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq3_2" value="a"> 5</label>
+                            <label><input type="radio" name="aq3_2" value="b"> 4</label>
+                            <label><input type="radio" name="aq3_2" value="c"> 6</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">معادله \(2x = 2 + 8\) را حل کنید.</div>
+                    </div>
+                    <div class="question-box" data-correct="c">
+                        <p><b>سوال ۳:</b> اگر \(x+3, 2x, 4x-1\) حسابی باشند، \(x\) کدام است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq3_3" value="a"> 1</label>
+                            <label><input type="radio" name="aq3_3" value="b"> 2</label>
+                            <label><input type="radio" name="aq3_3" value="c"> -2</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">معادله \(2(2x) = (x+3) + (4x-1)\) را حل کنید.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بخش 4 -->
+            <div id="arith-sec4" class="content-section">
+                <h3>درج واسطه‌های حسابی</h3>
+                <p>گاهی لازم است بین دو عدد \(a\) و \(b\)، تعدادی عدد (مثلاً \(m\) عدد) قرار دهیم به طوری که همه این اعداد، جملات متوالی یک دنباله حسابی را تشکیل دهند. به این اعداد، <b>واسطه‌های حسابی</b> می‌گویند.</p>
+                <p>در این حالت، \(a\) جمله اول، \(b\) جمله آخر و تعداد کل جملات برابر \(m + 2\) خواهد بود (چون \(m\) واسطه به علاوه دو سر). با استفاده از فرمول جمله عمومی برای جمله آخر (\(b\)) داریم:</p>
+                <div class="math-container">\[ b = a + (m+1)d \Rightarrow d = \frac{b - a}{m + 1} \]</div>
+                <p>این فرمول قدر نسبت (\(d\)) را به ما می‌دهد تا با اضافه کردن آن به \(a\)، واسطه‌ها را به دست آوریم.</p>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showSub('arith-sec4-ex')">مثال</button>
+                    <button class="btn-3d btn-green" onclick="playSound(); showSub('arith-sec4-quiz')">آزمون</button>
+                </div>
+                <div id="arith-sec4-ex" class="content-section" style="border-right-color: var(--neon-pink);">
+                    <h4>مثال:</h4>
+                    <p>بین ۲ و ۳۴ سه واسطه حسابی درج کنید.</p>
+                    <p><b>حل:</b> \(a=2, b=34, m=3\)</p>
+                    <div class="math-container">\[ d = \frac{34-2}{3+1} = \frac{32}{4} = 8 \]</div>
+                    <p>واسطه‌ها: \(10, 18, 26\)</p>
+                </div>
+                <div id="arith-sec4-quiz" class="content-section" style="border-right-color: var(--neon-green);">
+                    <h4>آزمون واسطه‌ها</h4>
+                    <div class="question-box" data-correct="b">
+                        <p><b>سوال ۱:</b> بین ۲ و ۱۴ یک واسطه حسابی قرار دهید. آن واسطه کدام است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq4_1" value="a"> 6</label>
+                            <label><input type="radio" name="aq4_1" value="b"> 8</label>
+                            <label><input type="radio" name="aq4_1" value="c"> 10</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(d = (14-2)/2 = 6\). جمله وسط \(2+6\) است.</div>
+                    </div>
+                    <div class="question-box" data-correct="c">
+                        <p><b>سوال ۲:</b> بین ۵ و ۲۰ دو واسطه حسابی درج می‌کنیم. قدر نسبت چقدر است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq4_2" value="a"> 3</label>
+                            <label><input type="radio" name="aq4_2" value="b"> 4</label>
+                            <label><input type="radio" name="aq4_2" value="c"> 5</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(d = (20-5)/(2+1) = 5\)</div>
+                    </div>
+                    <div class="question-box" data-correct="a">
+                        <p><b>سوال ۳:</b> بین ۱۰ و ۵۰، چند واسطه حسابی با قدر نسبت ۸ می‌توان درج کرد؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq4_3" value="a"> 4</label>
+                            <label><input type="radio" name="aq4_3" value="b"> 5</label>
+                            <label><input type="radio" name="aq4_3" value="c"> 3</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">رابطه \(50 = 10 + (m+1)8\) را حل کنید.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بخش 5: تعداد جملات -->
+            <div id="arith-sec5" class="content-section">
+                <h3>تعداد جملات دنباله حسابی</h3>
+                <p>گاهی در مسائل، دنباله‌ای به صورت «... و جمله آخر» داده شده است و ما باید تعداد جملات آن را پیدا کنیم. برای این کار می‌توانیم از روش تشریحی زیر استفاده کنیم:</p>
+                <p><b>راه‌حل تشریحی:</b> فرض کنید آخرین جمله دنباله \(b\) است و می‌خواهیم بدانیم این جمله، چندمین جمله (\(n\)) است. از آنجا که فرمول جمله عمومی \(t_n = a + (n-1)d\) است، کافیست \(b\) را به جای \(t_n\) قرار داده و معادله را برای یافتن \(n\) حل کنیم:</p>
+                <div class="math-container">\[ b = a + (n-1)d \]</div>
+                <p>با کمی ساده‌سازی، به فرمول کتاب درسی برای تعداد جملات می‌رسیم:</p>
+                <div class="math-container">\[ n = \frac{b - a}{d} + 1 \]</div>
+                <p>این فرمول می‌گوید: «اختلاف جمله آخر و اول را بر قدر نسبت تقسیم کرده و یک واحد به آن اضافه کنید.»</p>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showSub('arith-sec5-ex')">مثال</button>
+                    <button class="btn-3d btn-green" onclick="playSound(); showSub('arith-sec5-quiz')">آزمون</button>
+                </div>
+                <div id="arith-sec5-ex" class="content-section" style="border-right-color: var(--neon-pink);">
+                    <h4>مثال کاربردی:</h4>
+                    <p>تعداد اعداد دو رقمی بخش‌پذیر بر ۷ چند است؟</p>
+                    <p><b>حل:</b> این اعداد یک دنباله حسابی با قدر نسبت ۷ تشکیل می‌دهند. اولین عدد دو رقمی بخش‌پذیر بر ۷، عدد ۱۴ است و آخرین عدد، ۹۸ است.</p>
+                    <p>\(a = 14\), \(b = 98\), \(d = 7\)</p>
+                    <div class="math-container">\[ n = \frac{98 - 14}{7} + 1 = \frac{84}{7} + 1 = 12 + 1 = 13 \]</div>
+                    <p>بنابراین ۱۳ عدد دو رقمی بخش‌پذیر بر ۷ وجود دارد.</p>
+                </div>
+                <div id="arith-sec5-quiz" class="content-section" style="border-right-color: var(--neon-green);">
+                    <h4>آزمون تعداد جملات</h4>
+                    <div class="question-box" data-correct="b">
+                        <p><b>سوال ۱:</b> دنباله حسابی \(3, 7, 11, ..., 51\) چند جمله دارد؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq5_1" value="a"> 12</label>
+                            <label><input type="radio" name="aq5_1" value="b"> 13</label>
+                            <label><input type="radio" name="aq5_1" value="c"> 14</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">از فرمول \(n = \frac{b-a}{d} + 1\) استفاده کنید.</div>
+                    </div>
+                    <div class="question-box" data-correct="a">
+                        <p><b>سوال ۲:</b> تعداد اعداد دو رقمی بخش‌پذیر بر ۳ چند است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq5_2" value="a"> 30</label>
+                            <label><input type="radio" name="aq5_2" value="b"> 29</label>
+                            <label><input type="radio" name="aq5_2" value="c"> 31</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">اولین عدد ۱۲ و آخرین عدد ۹۹ است. \(n = (99-12)/3 + 1\)</div>
+                    </div>
+                    <div class="question-box" data-correct="c">
+                        <p><b>سوال ۳:</b> در دنباله حسابی \(2, 5, 8, ...\)، عدد ۳۲ چندمین جمله است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="aq5_3" value="a"> 10</label>
+                            <label><input type="radio" name="aq5_3" value="b"> 9</label>
+                            <label><input type="radio" name="aq5_3" value="c"> 11</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">معادله \(32 = 2 + (n-1)3\) را حل کنید.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn-3d btn-back" onclick="playSound(); showPage('home')">بازگشت به خانه</button>
+            </div>
+        </div>
+
+        <!-- ================= درسنامه دنباله هندسی ================= -->
+        <div id="geo-lesson" class="page">
+            <h2 style="text-align: center; color: var(--neon-purple);">درسنامه: دنباله هندسی</h2>
+            <div class="lesson-menu">
+                <button class="btn-3d" onclick="playSound(); toggleSection('geo-sec1')">جمله عمومی</button>
+                <button class="btn-3d" onclick="playSound(); toggleSection('geo-sec2')">یافتن جمله عمومی</button>
+                <button class="btn-3d" onclick="playSound(); toggleSection('geo-sec3')">سه جمله متوالی</button>
+                <button class="btn-3d" onclick="playSound(); toggleSection('geo-sec4')">واسطه‌های هندسی</button>
+                <!-- دکمه تعداد جملات همرنگ بقیه شد (کلاس پیش‌فرض) -->
+                <button class="btn-3d" onclick="playSound(); toggleSection('geo-sec5')">تعداد جملات دنباله</button>
+            </div>
+
+            <!-- بخش 1 -->
+            <div id="geo-sec1" class="content-section">
+                <h3>جمله عمومی دنباله هندسی</h3>
+                <p>دنباله‌ای را هندسی می‌نامیم که هر جمله آن (به جز جمله اول) از ضرب جمله قبلی در یک عدد ثابت و غیرصفر به دست آید. این عدد ثابت را <b>قدر نسبت</b> گویند و با \(r\) نمایش می‌دهند. اگر جمله اول \(a\) باشد، جمله عمومی (\(n\) ام) به صورت زیر است:</p>
+                <div class="math-container">\[ a_n = a \cdot r^{n-1} \]</div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showSub('geo-sec1-ex')">مثال</button>
+                    <button class="btn-3d btn-green" onclick="playSound(); showSub('geo-sec1-quiz')">آزمون</button>
+                </div>
+                <div id="geo-sec1-ex" class="content-section" style="border-right-color: var(--neon-pink);">
+                    <h4>مثال:</h4>
+                    <p>دنباله \(3, -6, 12, -24, ...\) را در نظر بگیرید. \(a=3\) و \(r=-2\). جمله عمومی آن \(a_n = 3(-2)^{n-1}\) است.</p>
+                </div>
+                <div id="geo-sec1-quiz" class="content-section" style="border-right-color: var(--neon-green);">
+                    <h4>آزمون بخش جمله عمومی</h4>
+                    <div class="question-box" data-correct="b">
+                        <p><b>سوال ۱:</b> کدام یک از دنباله‌های زیر هندسی است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq1_1" value="a"> \(2, 4, 6, 8, ...\)</label>
+                            <label><input type="radio" name="gq1_1" value="b"> \(2, 6, 18, 54, ...\)</label>
+                            <label><input type="radio" name="gq1_1" value="c"> \(1, 4, 9, 16, ...\)</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">در دنباله هندسی، خارج‌قسمت هر دو جمله متوالی عددی ثابت است.</div>
+                    </div>
+                    <div class="question-box" data-correct="c">
+                        <p><b>سوال ۲:</b> در دنباله هندسی \(5, 15, 45, ...\) قدر نسبت چقدر است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq1_2" value="a"> 2</label>
+                            <label><input type="radio" name="gq1_2" value="b"> 4</label>
+                            <label><input type="radio" name="gq1_2" value="c"> 3</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">جمله دوم را بر جمله اول تقسیم کنید.</div>
+                    </div>
+                    <div class="question-box" data-correct="a">
+                        <p><b>سوال ۳:</b> جمله عمومی دنباله هندسی با جمله اول \(2\) و قدر نسبت \(3\) کدام است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq1_3" value="a"> \(a_n = 2 \cdot 3^{n-1}\)</label>
+                            <label><input type="radio" name="gq1_3" value="b"> \(a_n = 3 \cdot 2^{n-1}\)</label>
+                            <label><input type="radio" name="gq1_3" value="c"> \(a_n = 2 \cdot 3^n\)</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">از فرمول \(a_n = a \cdot r^{n-1}\) استفاده کنید.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بخش 2 -->
+            <div id="geo-sec2" class="content-section">
+                <h3>یافتن جمله عمومی با داشتن دو جمله</h3>
+                <p>اگر دو جمله غیرمتوالی \(t_i\) و \(t_j\) از یک دنباله هندسی داده شده باشد، برای یافتن قدر نسبت از رابطه زیر استفاده می‌کنیم:</p>
+                <div class="math-container">\[ r^{i-j} = \frac{t_i}{t_j} \]</div>
+                <p>این فرمول از تقسیم معادلات دو جمله به دست می‌آید. پس از یافتن \(r\) (با توجه به توان)، با جایگذاری در یکی از جملات، \(a\) را یافته و جمله عمومی را می‌نویسیم.</p>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showSub('geo-sec2-ex')">مثال</button>
+                    <button class="btn-3d btn-green" onclick="playSound(); showSub('geo-sec2-quiz')">آزمون</button>
+                </div>
+                <div id="geo-sec2-ex" class="content-section" style="border-right-color: var(--neon-pink);">
+                    <h4>مثال:</h4>
+                    <p>اگر \(a_6=40\) و \(a_8=320\) باشد:</p>
+                    <div class="math-container">\[ r^2 = \frac{320}{40} = 8 \Rightarrow r = \pm 2\sqrt{2} \]</div>
+                </div>
+                <div id="geo-sec2-quiz" class="content-section" style="border-right-color: var(--neon-green);">
+                    <h4>آزمون یافتن جمله عمومی</h4>
+                    <div class="question-box" data-correct="b">
+                        <p><b>سوال ۱:</b> اگر \(a_3=12\) و \(a_5=48\) باشد، مقدار \(r^2\) چقدر است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq2_1" value="a"> 2</label>
+                            <label><input type="radio" name="gq2_1" value="b"> 4</label>
+                            <label><input type="radio" name="gq2_1" value="c"> 8</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(r^{5-3} = 48/12\)</div>
+                    </div>
+                    <div class="question-box" data-correct="a">
+                        <p><b>سوال ۲:</b> اگر \(a_2=6\) و \(a_4=24\) باشد (با فرض \(r>0\))، جمله اول چقدر است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq2_2" value="a"> 3</label>
+                            <label><input type="radio" name="gq2_2" value="b"> 2</label>
+                            <label><input type="radio" name="gq2_2" value="c"> 4</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">ابتدا \(r=2\) را بیابید، سپس \(a_2 = a_1 \cdot 2\).</div>
+                    </div>
+                    <div class="question-box" data-correct="c">
+                        <p><b>سوال ۳:</b> اگر \(a_4=8\) و \(a_7=-64\) باشد، قدر نسبت کدام است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq2_3" value="a"> 2</label>
+                            <label><input type="radio" name="gq2_3" value="b"> -4</label>
+                            <label><input type="radio" name="gq2_3" value="c"> -2</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(r^3 = -64/8 = -8\)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بخش 3 -->
+            <div id="geo-sec3" class="content-section">
+                <h3>رابطه بین سه جمله متوالی (واسطه هندسی)</h3>
+                <p>اگر سه عدد \(a, b, c\) به ترتیب سه جمله متوالی از یک دنباله هندسی باشند، عدد وسط (\(b\)) را <b>واسطه هندسی</b> بین دو عدد دیگر می‌نامند. در این حالت، نسبت \(b\) به \(a\) برابر با نسبت \(c\) به \(b\) است (چون هر دو برابر \(r\) هستند). بنابراین رابطه زیر برقرار است:</p>
+                <div class="math-container">\[ b^2 = a \cdot c \]</div>
+                <p>این فرمول بیان می‌کند که مجذور جمله وسط، برابر با حاصل‌ضرب دو جمله کناری است. از این رابطه برای یافتن مجهولات استفاده می‌شود.</p>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showSub('geo-sec3-ex')">مثال</button>
+                    <button class="btn-3d btn-green" onclick="playSound(); showSub('geo-sec3-quiz')">آزمون</button>
+                </div>
+                <div id="geo-sec3-ex" class="content-section" style="border-right-color: var(--neon-pink);">
+                    <h4>مثال:</h4>
+                    <p>مقدار \(x\) را طوری بیابید که \(x-1, x+1, 2x+3\) هندسی باشند.</p>
+                    <div class="math-container">\[ (x+1)^2 = (x-1)(2x+3) \Rightarrow x^2 - x - 4 = 0 \]</div>
+                </div>
+                <div id="geo-sec3-quiz" class="content-section" style="border-right-color: var(--neon-green);">
+                    <h4>آزمون واسطه هندسی</h4>
+                    <div class="question-box" data-correct="b">
+                        <p><b>سوال ۱:</b> واسطه هندسی بین ۴ و ۱۶ کدام است؟ (مقدار مثبت)</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq3_1" value="a"> 6</label>
+                            <label><input type="radio" name="gq3_1" value="b"> 8</label>
+                            <label><input type="radio" name="gq3_1" value="c"> 10</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(b = \sqrt{4 \times 16}\)</div>
+                    </div>
+                    <div class="question-box" data-correct="a">
+                        <p><b>سوال ۲:</b> اگر \(3, x, 27\) دنباله هندسی باشند، مقدار مثبت \(x\) چقدر است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq3_2" value="a"> 9</label>
+                            <label><input type="radio" name="gq3_2" value="b"> 12</label>
+                            <label><input type="radio" name="gq3_2" value="c"> 15</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(x^2 = 3 \times 27 = 81\)</div>
+                    </div>
+                    <div class="question-box" data-correct="c">
+                        <p><b>سوال ۳:</b> اگر \(x+2, 2x+1, 4x-1\) هندسی باشند، \(x\) کدام است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq3_3" value="a"> 3</label>
+                            <label><input type="radio" name="gq3_3" value="b"> 2</label>
+                            <label><input type="radio" name="gq3_3" value="c"> 1</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\((2x+1)^2 = (x+2)(4x-1)\)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بخش 4 -->
+            <div id="geo-sec4" class="content-section">
+                <h3>درج واسطه‌های هندسی</h3>
+                <p>اگر بخواهیم بین دو عدد \(a\) و \(b\)، تعداد \(k\) واسطه هندسی قرار دهیم (به طوری که \(a\) جمله اول و \(b\) جمله آخر باشد)، با استفاده از فرمول جمله عمومی برای جمله آخر (\(b\)) داریم:</p>
+                <div class="math-container">\[ b = a \cdot r^{k+1} \Rightarrow r^{k+1} = \frac{b}{a} \]</div>
+                <p>با حل این معادله، قدر نسبت (\(r\)) به دست می‌آید و سپس با ضرب متوالی در \(r\)، واسطه‌ها را می‌یابیم.</p>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showSub('geo-sec4-ex')">مثال</button>
+                    <button class="btn-3d btn-green" onclick="playSound(); showSub('geo-sec4-quiz')">آزمون</button>
+                </div>
+                <div id="geo-sec4-ex" class="content-section" style="border-right-color: var(--neon-pink);">
+                    <h4>مثال:</h4>
+                    <p>بین ۲ و ۴۸ سه واسطه هندسی درج کنید.</p>
+                    <div class="math-container">\[ r^4 = \frac{48}{2} = 24 \Rightarrow r = \sqrt[4]{24} \]</div>
+                </div>
+                <div id="geo-sec4-quiz" class="content-section" style="border-right-color: var(--neon-green);">
+                    <h4>آزمون واسطه‌ها</h4>
+                    <div class="question-box" data-correct="b">
+                        <p><b>سوال ۱:</b> بین ۳ و ۱۲ یک واسطه هندسی قرار دهید.</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq4_1" value="a"> 4</label>
+                            <label><input type="radio" name="gq4_1" value="b"> 6</label>
+                            <label><input type="radio" name="gq4_1" value="c"> 8</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(r^2 = 12/3 = 4 \Rightarrow r=2\). واسطه \(3 \times 2 = 6\).</div>
+                    </div>
+                    <div class="question-box" data-correct="c">
+                        <p><b>سوال ۲:</b> بین ۲ و ۱۶۲ سه واسطه هندسی درج می‌کنیم. قدر نسبت چقدر است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq4_2" value="a"> 2</label>
+                            <label><input type="radio" name="gq4_2" value="b"> 4</label>
+                            <label><input type="radio" name="gq4_2" value="c"> 3</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(r^4 = 162/2 = 81\)</div>
+                    </div>
+                    <div class="question-box" data-correct="a">
+                        <p><b>سوال ۳:</b> بین \(\frac{5}{27}\) و \(135\) چند واسطه هندسی با قدر نسبت ۳ می‌توان درج کرد؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq4_3" value="a"> 5</label>
+                            <label><input type="radio" name="gq4_3" value="b"> 4</label>
+                            <label><input type="radio" name="gq4_3" value="c"> 6</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(3^{k+1} = 135 / (5/27) = 729 = 3^6 \Rightarrow k+1=6 \Rightarrow k=5\)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بخش 5: تعداد جملات هندسی -->
+            <div id="geo-sec5" class="content-section">
+                <h3>تعداد جملات دنباله هندسی</h3>
+                <p>اگر در یک دنباله هندسی، جمله اول (\(a\))، جمله آخر (\(b\)) و قدر نسبت (\(r\)) معلوم باشند، می‌توانیم تعداد جملات (\(n\)) را به دست آوریم. روش تشریحی به این صورت است که جمله آخر را برابر با فرمول جمله عمومی قرار می‌دهیم:</p>
+                <div class="math-container">\[ b = a \cdot r^{n-1} \]</div>
+                <p>سپس با تقسیم دو طرف بر \(a\) و حل معادله توانی، مقدار \(n\) به دست می‌آید. (معمولاً در مسائل کتاب درسی، اعداد طوری انتخاب می‌شوند که \(r\) و \(n\) اعداد صحیح باشند.)</p>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-3d btn-pink" onclick="playSound(); showSub('geo-sec5-ex')">مثال</button>
+                    <button class="btn-3d btn-green" onclick="playSound(); showSub('geo-sec5-quiz')">آزمون</button>
+                </div>
+                <div id="geo-sec5-ex" class="content-section" style="border-right-color: var(--neon-pink);">
+                    <h4>مثال:</h4>
+                    <p>در یک دنباله هندسی، جمله اول ۲، جمله آخر ۱۶۲ و قدر نسبت ۳ است. این دنباله چند جمله دارد؟</p>
+                    <p><b>حل:</b> \(b = a \cdot r^{n-1} \Rightarrow 162 = 2 \cdot 3^{n-1}\)</p>
+                    <div class="math-container">\[ 81 = 3^{n-1} \Rightarrow 3^4 = 3^{n-1} \Rightarrow n-1 = 4 \Rightarrow n = 5 \]</div>
+                    <p>این دنباله ۵ جمله دارد.</p>
+                </div>
+                <div id="geo-sec5-quiz" class="content-section" style="border-right-color: var(--neon-green);">
+                    <h4>آزمون تعداد جملات</h4>
+                    <div class="question-box" data-correct="a">
+                        <p><b>سوال ۱:</b> دنباله هندسی \(2, 6, 18, ..., 162\) چند جمله دارد؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq5_1" value="a"> 5</label>
+                            <label><input type="radio" name="gq5_1" value="b"> 4</label>
+                            <label><input type="radio" name="gq5_1" value="c"> 6</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">معادله \(162 = 2 \cdot 3^{n-1}\) را حل کنید.</div>
+                    </div>
+                    <div class="question-box" data-correct="b">
+                        <p><b>سوال ۲:</b> در دنباله هندسی \(1, 2, 4, ...\)، عدد ۶۴ چندمین جمله است؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq5_2" value="a"> 6</label>
+                            <label><input type="radio" name="gq5_2" value="b"> 7</label>
+                            <label><input type="radio" name="gq5_2" value="c"> 8</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(64 = 1 \cdot 2^{n-1} \Rightarrow 2^6 = 2^{n-1}\)</div>
+                    </div>
+                    <div class="question-box" data-correct="c">
+                        <p><b>سوال ۳:</b> دنباله هندسی \(3, 6, 12, ..., 192\) چند جمله دارد؟</p>
+                        <div class="options">
+                            <label><input type="radio" name="gq5_3" value="a"> 5</label>
+                            <label><input type="radio" name="gq5_3" value="b"> 6</label>
+                            <label><input type="radio" name="gq5_3" value="c"> 7</label>
+                        </div>
+                        <button class="hint-btn" onclick="toggleHint(this)">راهنمایی</button>
+                        <div class="hint-text">\(192 = 3 \cdot 2^{n-1} \Rightarrow 64 = 2^{n-1}\)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn-3d btn-back" onclick="playSound(); showPage('home')">بازگشت به خانه</button>
+            </div>
+        </div>
+
+        <!-- ================= صفحه کارنامه ================= -->
+        <div id="report-page" class="page">
+            <div class="card">
+                <h2 style="text-align: center; color: var(--neon-purple); margin-bottom: 20px;">کارنامه آزمون‌های ریاضی</h2>
+                
+                <div id="printable-area">
+                    <div id="report-student-name" class="student-name-display">دانش‌آموز</div>
+                    
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>عنوان درسنامه و بخش</th>
+                                <th>تعداد کل سوالات</th>
+                                <th>پاسخ صحیح</th>
+                                <th>وضعیت</th>
+                            </tr>
+                        </thead>
+                        <tbody id="report-body">
+                            <!-- Results will be injected here via JS -->
+                        </tbody>
+                    </table>
+                    
+                    <div id="total-score-container" style="text-align: center; margin-top: 20px; font-size: 1.3em; font-weight: bold; color: #d81b60;">
+                        <!-- Total score injected here -->
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn-3d btn-orange" onclick="window.print()">چاپ کارنامه</button>
+                    <button class="btn-3d" style="background: #4caf50; box-shadow: 0 6px 0 #388e3c;" onclick="downloadReport()">دانلود فایل متنی</button>
+                    <button class="btn-3d btn-back" onclick="playSound(); showPage('home')">بازگشت به خانه</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        تهیه کننده: مژگان بنی‌اسدآزاد
+    </footer>
+
+    <script>
+        function playSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            } catch (e) {}
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            if(pageId === 'report-page') {
+                generateReport();
+            }
+        }
+
+        // بستن کامل تمام بخش‌های دیگر قبل از باز کردن بخش جدید
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const parentPage = section.closest('.page');
+            
+            if (section.classList.contains('active')) {
+                section.classList.remove('active');
+            } else {
+                parentPage.querySelectorAll('.content-section').forEach(sec => {
+                    // بستن منوهای اصلی
+                    if (sec.parentElement === parentPage) {
+                        sec.classList.remove('active');
+                        // بستن زیرمجموعه‌های داخل آن منو (مثال و آزمون)
+                        sec.querySelectorAll('.content-section').forEach(sub => {
+                            sub.classList.remove('active');
+                        });
+                    }
+                });
+                section.classList.add('active');
+            }
+        }
+
+        function showSub(subId) {
+            const subSection = document.getElementById(subId);
+            const parentSection = subSection.closest('.content-section');
+            parentSection.querySelectorAll('.content-section').forEach(sub => {
+                if(sub.id !== subId) sub.classList.remove('active');
+            });
+            if (subSection.classList.contains('active')) {
+                subSection.classList.remove('active');
+            } else {
+                subSection.classList.add('active');
+            }
+        }
+
+        function toggleHint(btn) {
+            playSound();
+            const hintDiv = btn.nextElementSibling;
+            if (hintDiv.style.display === "block") {
+                hintDiv.style.display = "none";
+                btn.innerText = "راهنمایی";
+            } else {
+                hintDiv.style.display = "block";
+                btn.innerText = "بستن راهنمایی";
+            }
+        }
+
+        // --- گزارش کارنامه ---
+        const quizData = [
+            { id: 'arith-sec1', title: 'حسابی: جمله عمومی', qCount: 3, namePrefix: 'aq1_' },
+            { id: 'arith-sec2', title: 'حسابی: یافتن جمله عمومی', qCount: 3, namePrefix: 'aq2_' },
+            { id: 'arith-sec3', title: 'حسابی: سه جمله متوالی', qCount: 3, namePrefix: 'aq3_' },
+            { id: 'arith-sec4', title: 'حسابی: واسطه‌ها', qCount: 3, namePrefix: 'aq4_' },
+            { id: 'arith-sec5', title: 'حسابی: تعداد جملات', qCount: 3, namePrefix: 'aq5_' },
+            { id: 'geo-sec1', title: 'هندسی: جمله عمومی', qCount: 3, namePrefix: 'gq1_' },
+            { id: 'geo-sec2', title: 'هندسی: یافتن جمله عمومی', qCount: 3, namePrefix: 'gq2_' },
+            { id: 'geo-sec3', title: 'هندسی: سه جمله متوالی', qCount: 3, namePrefix: 'gq3_' },
+            { id: 'geo-sec4', title: 'هندسی: واسطه‌ها', qCount: 3, namePrefix: 'gq4_' },
+            { id: 'geo-sec5', title: 'هندسی: تعداد جملات', qCount: 3, namePrefix: 'gq5_' }
+        ];
+
+        let currentReportData = {};
+
+        function generateReport() {
+            let totalCorrect = 0;
+            let totalQuestions = 0;
+            const tbody = document.getElementById('report-body');
+            tbody.innerHTML = ''; 
+
+            let studentName = document.getElementById('main-student-name').value.trim();
+            if(studentName === '') {
+                studentName = 'دانش‌آموز';
+            }
+            
+            document.getElementById('report-student-name').innerText = `نام دانش‌آموز: ${studentName}`;
+            
+            currentReportData = { name: studentName, details: [] };
+
+            quizData.forEach(quiz => {
+                let correctInQuiz = 0;
+                totalQuestions += quiz.qCount;
+                
+                for (let i = 1; i <= quiz.qCount; i++) {
+                    const qName = quiz.namePrefix + i;
+                    const questionBox = document.querySelector(`.question-box input[name="${qName}"]`).closest('.question-box');
+                    const correctAnswer = questionBox.getAttribute('data-correct');
+                    const selectedOption = document.querySelector(`input[name="${qName}"]:checked`);
+                    
+                    if (selectedOption && selectedOption.value === correctAnswer) {
+                        correctInQuiz++;
+                    }
+                }
+
+                totalCorrect += correctInQuiz;
+                
+                let status = '';
+                let statusColor = '';
+                if (correctInQuiz === quiz.qCount) {
+                    status = 'عالی'; statusColor = 'green';
+                } else if (correctInQuiz > 0) {
+                    status = 'نیاز به مرور'; statusColor = 'orange';
+                } else {
+                    status = 'ضعیف'; statusColor = 'red';
+                }
+
+                currentReportData.details.push({
+                    title: quiz.title,
+                    total: quiz.qCount,
+                    correct: correctInQuiz,
+                    status: status
+                });
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${quiz.title}</td>
+                    <td>${quiz.qCount}</td>
+                    <td style="color: ${statusColor}; font-weight: bold;">${correctInQuiz}</td>
+                    <td style="color: ${statusColor}; font-weight: bold;">${status}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const scoreDisplay = document.getElementById('total-score-container');
+            const percentage = Math.round((totalCorrect / totalQuestions) * 100);
+            scoreDisplay.innerHTML = `نمره کل: ${totalCorrect} از ${totalQuestions} (${percentage}%)`;
+            currentReportData.totalScore = totalCorrect;
+            currentReportData.totalQuestions = totalQuestions;
+            currentReportData.percentage = percentage;
+
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('report-page').classList.add('active');
+        }
+
+        function downloadReport() {
+            playSound();
+            const studentName = currentReportData.name || 'دانش‌آموز';
+
+            let text = `*** کارنامه آزمون‌های ریاضی ***\n\n`;
+            text += `نام دانش‌آموز: ${studentName}\n`;
+            text += `تاریخ: ${new Date().toLocaleDateString('fa-IR')}\n`;
+            text += `----------------------------------------\n\n`;
+            
+            currentReportData.details.forEach(item => {
+                text += `بخش: ${item.title}\n`;
+                text += `نمره: ${item.correct} از ${item.total} (${item.status})\n\n`;
+            });
+
+            text += `----------------------------------------\n`;
+            text += `نمره کل: ${currentReportData.totalScore} از ${currentReportData.totalQuestions} (${currentReportData.percentage}%)\n\n`;
+            text += `تهیه کننده: مژگان بنی‌اسدآزاد - دبیرستان فاطمیه کرمان\n`;
+
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Karnameh_${studentName.replace(/\s+/g, '_')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
